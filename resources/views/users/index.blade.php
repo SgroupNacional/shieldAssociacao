@@ -12,7 +12,7 @@
                     <thead>
                         <tr>
                             <th>Nome</th>
-                            <th>Email</th>
+                            <th>{{ __('Email') }}</th>
                             <th>Grupo</th>
                             <th>Criado em</th>
                         </tr>
