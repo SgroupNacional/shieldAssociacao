@@ -53,7 +53,7 @@ var KTCreateAccount = function () {
 						KTUtil.scrollTop();
 					} else {
 						Swal.fire({
-							text: "Sorry, looks like there are some errors detected, please try again.",
+							text: "Desculpe, parece que alguns erros foram detectados. Por favor, tente novamente.",
 							icon: "error",
 							buttonsStyling: false,
 							confirmButtonText: "Ok, got it!",
@@ -111,7 +111,7 @@ var KTCreateAccount = function () {
 					}, 2000);
 				} else {
 					Swal.fire({
-						text: "Sorry, looks like there are some errors detected, please try again.",
+						text: "Desculpe, parece que alguns erros foram detectados. Por favor, tente novamente.",
 						icon: "error",
 						buttonsStyling: false,
 						confirmButtonText: "Ok, got it!",

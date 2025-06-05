@@ -304,7 +304,7 @@ var KTAppEcommerceSalesSaveOrder = function () {
                         }, 2000);
                     } else {
                         Swal.fire({
-                            html: "Sorry, looks like there are some errors detected, please try again.",
+                            html: "Desculpe, parece que alguns erros foram detectados. Por favor, tente novamente.",
                             icon: "error",
                             buttonsStyling: false,
                             confirmButtonText: "Ok, got it!",
