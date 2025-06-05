@@ -7,16 +7,20 @@
                         <form method="POST" action="{{ route('password.email') }}" class="form w-100" novalidate="novalidate" id="kt_forgot_password_form">
                             @csrf
                             <div class="text-center mb-11">
-                                <h1 class="text-gray-900 fw-bolder mb-3">Forgot Password</h1>
-                                <div class="text-gray-500 fw-semibold fs-6">Enter your email to reset your password.</div>
+
+                                <h1 class="text-gray-900 fw-bolder mb-3">Esqueceu a senha?</h1>
+                                <div class="text-gray-500 fw-semibold fs-6">Digite seu e-mail para redefinir sua senha.</div>
+
+                             
+
                             </div>
                             <div class="fv-row mb-8">
-                                <input id="email" class="form-control bg-transparent" type="email" name="email" :value="old('email')" required autofocus placeholder="Email" />
+                                <input id="email" class="form-control bg-transparent" type="email" name="email" :value="old('email')" required autofocus placeholder="E-mail" />
                                 <x-input-error :messages="$errors->get('email')" class="mt-2" />
                             </div>
                             <div class="d-grid mb-10">
                                 <button type="submit" id="kt_password_reset_submit" class="btn btn-primary">
-                                    <span class="indicator-label">Send Reset Link</span>
+                                    <span class="indicator-label">Enviar link de redefinição</span>
                                 </button>
                             </div>
                         </form>
