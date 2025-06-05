@@ -7,8 +7,12 @@
                         <form method="POST" action="{{ route('password.email') }}" class="form w-100" novalidate="novalidate" id="kt_forgot_password_form">
                             @csrf
                             <div class="text-center mb-11">
-                                <h1 class="text-gray-900 fw-bolder mb-3">Esqueceu a Senha</h1>
-                                <div class="text-gray-500 fw-semibold fs-6">Informe seu e-mail para redefinir a senha.</div>
+
+                                <h1 class="text-gray-900 fw-bolder mb-3">Esqueceu a senha?</h1>
+                                <div class="text-gray-500 fw-semibold fs-6">Digite seu e-mail para redefinir sua senha.</div>
+
+                             
+
                             </div>
                             <div class="fv-row mb-8">
                                 <input id="email" class="form-control bg-transparent" type="email" name="email" :value="old('email')" required autofocus placeholder="E-mail" />
