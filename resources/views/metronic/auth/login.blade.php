@@ -7,25 +7,25 @@
                         <form method="POST" action="{{ route('login') }}" class="form w-100" novalidate="novalidate" id="kt_sign_in_form">
                             @csrf
                             <div class="text-center mb-11">
-                                <h1 class="text-gray-900 fw-bolder mb-3">Sign In</h1>
+                                <h1 class="text-gray-900 fw-bolder mb-3">Entrar</h1>
                             </div>
                             <div class="fv-row mb-8">
-                                <input id="email" class="form-control bg-transparent" type="email" name="email" :value="old('email')" required autofocus placeholder="Email" />
+                                <input id="email" class="form-control bg-transparent" type="email" name="email" :value="old('email')" required autofocus placeholder="E-mail" />
                                 <x-input-error :messages="$errors->get('email')" class="mt-2" />
                             </div>
                             <div class="fv-row mb-3">
-                                <input id="password" class="form-control bg-transparent" type="password" name="password" required placeholder="Password" autocomplete="current-password" />
+                                <input id="password" class="form-control bg-transparent" type="password" name="password" required placeholder="Senha" autocomplete="current-password" />
                                 <x-input-error :messages="$errors->get('password')" class="mt-2" />
                             </div>
                             <div class="d-flex flex-stack flex-wrap gap-3 fs-base fw-semibold mb-8">
                                 <div></div>
                                 @if (Route::has('password.request'))
-                                    <a class="link-primary" href="{{ route('password.request') }}">Forgot Password ?</a>
+                                    <a class="link-primary" href="{{ route('password.request') }}">Esqueceu a senha?</a>
                                 @endif
                             </div>
                             <div class="d-grid mb-10">
                                 <button type="submit" id="kt_sign_in_submit" class="btn btn-primary">
-                                    <span class="indicator-label">Sign In</span>
+                                    <span class="indicator-label">Entrar</span>
                                 </button>
                             </div>
                         </form>
