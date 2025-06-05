@@ -7,9 +7,22 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    {{ __("You're logged in!") }}
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                <div class="bg-white p-6 shadow sm:rounded-lg">
+                    <div class="text-gray-500">{{ __('Associados') }}</div>
+                    <div class="mt-2 text-3xl">{{ $usersCount }}</div>
+                </div>
+                <div class="bg-white p-6 shadow sm:rounded-lg">
+                    <div class="text-gray-500">{{ __('Grupos de Permissão') }}</div>
+                    <div class="mt-2 text-3xl">{{ $rolesCount }}</div>
+                </div>
+                <div class="bg-white p-6 shadow sm:rounded-lg">
+                    <div class="text-gray-500">{{ __('Usuários por Grupo') }}</div>
+                    <ul class="mt-2 space-y-1">
+                        @foreach($usersByRole as $role)
+                            <li>{{ $role->name }}: {{ $role->users_count }}</li>
+                        @endforeach
+                    </ul>
                 </div>
             </div>
         </div>
