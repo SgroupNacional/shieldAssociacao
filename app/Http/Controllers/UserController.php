@@ -120,10 +120,17 @@ class UserController extends Controller{
             $nested['email']    = $item->email;
             $nested['role']     = "<span class='badge badge-light'>{$item->role_name}</span>";
             $nested['status'] = '<span class="badge badge-success">Ativo</span>';
+
+            $token = csrf_token();
             $nested['acoes']    = "
             <div class='text-end'>
                 <a href='/users/{$item->id}' class='btn btn-sm btn-info me-1'>Visualizar</a>
-                <a href='/users/{$item->id}/edit' class='btn btn-sm btn-warning'>Editar</a>
+                <a href='/users/{$item->id}/edit' class='btn btn-sm btn-warning me-1'>Editar</a>
+                <form action='/users/{$item->id}' method='POST' class='d-inline' onsubmit=\"return confirm('Tem certeza que deseja excluir este usuário?');\">
+                    <input type='hidden' name='_token' value='{$token}'>
+                    <input type='hidden' name='_method' value='DELETE'>
+                    <button type='submit' class='btn btn-sm btn-danger'>Excluir</button>
+                </form>
             </div>";
 
             $data[] = $nested;
