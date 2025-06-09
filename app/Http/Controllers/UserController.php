@@ -24,6 +24,13 @@ class UserController extends Controller{
         return view('users.create', compact('roles'));
     }
 
+    public function createModal(): View
+    {
+        $roles = Role::all();
+
+        return view('users.partials.create-modal', compact('roles'));
+    }
+
     public function store(Request $request): RedirectResponse{
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],

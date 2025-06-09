@@ -19,6 +19,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    Route::get('users/create-modal', [UserController::class, 'createModal'])->name('users.create-modal');
     Route::resource('users', UserController::class);
     Route::get('users/create-modal', [UserController::class, 'createModal'])->name('users.create-modal');
     Route::get('users/{user}/view-modal', [UserController::class, 'viewModal'])->name('users.view-modal');
