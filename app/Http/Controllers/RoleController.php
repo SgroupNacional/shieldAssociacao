@@ -17,6 +17,50 @@ class RoleController extends Controller
         return view('roles.index', compact('roles'));
     }
 
+    public function create(): View
+    {
+        return view('roles.create');
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255', 'unique:roles,name'],
+        ]);
+
+        Role::create($validated);
+
+        return redirect()->route('roles.index');
+    }
+
+    public function show(Role $role): View
+    {
+        return view('roles.show', compact('role'));
+    }
+
+    public function edit(Role $role): View
+    {
+        return view('roles.edit', compact('role'));
+    }
+
+    public function update(Request $request, Role $role)
+    {
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255', 'unique:roles,name,' . $role->id],
+        ]);
+
+        $role->update($validated);
+
+        return redirect()->route('roles.index');
+    }
+
+    public function destroy(Role $role)
+    {
+        $role->delete();
+
+        return redirect()->route('roles.index');
+    }
+
     public function listar(Request $request): JsonResponse
     {
         $columns = [
@@ -54,9 +98,11 @@ class RoleController extends Controller
             $nested['id']   = $role->id;
             $nested['nome'] = $role->name;
             $nested['status'] = '<span class="badge badge-success">Ativo</span>';
+            $show   = route('roles.show', $role->id);
+            $edit   = route('roles.edit', $role->id);
             $nested['acoes'] = "<div class='text-end'>".
-                "<a href='/roles/{$role->id}' class='btn btn-sm btn-info me-1'>Visualizar</a>".
-                "<a href='/roles/{$role->id}/edit' class='btn btn-sm btn-warning'>Editar</a>".
+                "<a href='{$show}' class='btn btn-sm btn-info me-1'>Visualizar</a>".
+                "<a href='{$edit}' class='btn btn-sm btn-warning'>Editar</a>".
                 "</div>";
 
             $data[] = $nested;
