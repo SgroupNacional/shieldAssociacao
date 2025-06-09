@@ -96,6 +96,13 @@ class UserController extends Controller{
         return view('users.partials.edit-modal', compact('user', 'roles'));
     }
 
+    public function createModal(): View
+    {
+        $roles = Role::all();
+
+        return view('users.partials.create-modal', compact('roles'));
+    }
+
     public function listar(Request $request){
         $columns = [
             0 => 'users.id',
