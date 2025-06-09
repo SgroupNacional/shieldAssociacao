@@ -84,6 +84,18 @@ class UserController extends Controller{
         return response()->json(['status' => $user->status]);
     }
 
+    public function viewModal(User $user): View
+    {
+        return view('users.partials.view-modal', compact('user'));
+    }
+
+    public function editModal(User $user): View
+    {
+        $roles = Role::all();
+
+        return view('users.partials.edit-modal', compact('user', 'roles'));
+    }
+
     public function listar(Request $request){
         $columns = [
             0 => 'users.id',
@@ -146,9 +158,9 @@ class UserController extends Controller{
             $token = csrf_token();
             $nested['acoes']    = "
             <div class='text-end'>
-                <a href='/users/{$item->id}' class='btn btn-sm btn-info me-1'>Visualizar</a>
-                <a href='/users/{$item->id}/edit' class='btn btn-sm btn-warning me-1'>Editar</a>
-                <form action='/users/{$item->id}' method='POST' class='d-inline'>
+                <button type='button' class='btn btn-sm btn-info me-1 view-user' data-id='{$item->id}'>Visualizar</button>
+                <button type='button' class='btn btn-sm btn-warning me-1 edit-user' data-id='{$item->id}'>Editar</button>
+                <form action='/users/{$item->id}' method='POST' class='d-inline' onsubmit=\"return confirm('Tem certeza que deseja excluir este usuário?');\">
                     <input type='hidden' name='_token' value='{$token}'>
                     <input type='hidden' name='_method' value='DELETE'>
                     <button type='button' class='btn btn-sm btn-danger delete-user' data-id='{$item->id}'>Excluir</button>
