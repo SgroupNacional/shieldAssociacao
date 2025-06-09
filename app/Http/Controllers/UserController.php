@@ -94,7 +94,6 @@ class UserController extends Controller{
         ];
 
         $totalData = DB::table('users')
-            ->where('users.status', 1)
             ->whereNull('users.deleted_at')
             ->count();
         $totalFiltered = $totalData;
@@ -113,7 +112,6 @@ class UserController extends Controller{
                 'users.status',
                 'roles.name as role_name',
             ])
-            ->where('users.status', 1)
             ->whereNull('users.deleted_at');
 
         if (!empty($request->input('search.value'))) {
