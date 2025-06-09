@@ -1,1 +1,0 @@
-Metronic asset placeholder
