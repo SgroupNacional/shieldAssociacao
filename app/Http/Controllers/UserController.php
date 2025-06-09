@@ -148,10 +148,10 @@ class UserController extends Controller{
             <div class='text-end'>
                 <a href='/users/{$item->id}' class='btn btn-sm btn-info me-1'>Visualizar</a>
                 <a href='/users/{$item->id}/edit' class='btn btn-sm btn-warning me-1'>Editar</a>
-                <form action='/users/{$item->id}' method='POST' class='d-inline' onsubmit=\"return confirm('Tem certeza que deseja excluir este usuário?');\">
+                <form action='/users/{$item->id}' method='POST' class='d-inline'>
                     <input type='hidden' name='_token' value='{$token}'>
                     <input type='hidden' name='_method' value='DELETE'>
-                    <button type='submit' class='btn btn-sm btn-danger'>Excluir</button>
+                    <button type='button' class='btn btn-sm btn-danger delete-user' data-id='{$item->id}'>Excluir</button>
                 </form>
             </div>";
 
