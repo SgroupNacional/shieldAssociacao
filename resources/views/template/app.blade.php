@@ -10,6 +10,7 @@
 
     <link rel="stylesheet" href="{{ asset('metronic/assets/plugins/global/plugins.bundle.css') }}">
     <link rel="stylesheet" href="{{ asset('metronic/assets/css/style.bundle.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast@1.4.0/dist/css/iziToast.min.css" />
     @yield('css')
     <script>// Frame-busting to prevent site from being loaded within a frame without permission (click-jacking) if (window.top != window.self) { window.top.location.replace(window.self.location.href); }</script>
 </head>
@@ -277,6 +278,7 @@
 
 <script src="{{ asset('metronic/assets/plugins/global/plugins.bundle.js') }}"></script>
 <script src="{{ asset('metronic/assets/js/scripts.bundle.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/izitoast@1.4.0/dist/js/iziToast.min.js"></script>
 @yield('js')
 @yield('script')
 </body>

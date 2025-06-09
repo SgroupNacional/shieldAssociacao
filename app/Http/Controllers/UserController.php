@@ -70,9 +70,18 @@ class UserController extends Controller{
     }
 
     public function destroy(User $user): RedirectResponse{
+        $user->status = false;
         $user->delete();
 
         return redirect()->route('users.index');
+    }
+
+    public function toggleStatus(User $user): JsonResponse
+    {
+        $user->status = !$user->status;
+        $user->save();
+
+        return response()->json(['status' => $user->status]);
     }
 
     public function listar(Request $request){
@@ -81,9 +90,13 @@ class UserController extends Controller{
             1 => 'users.name',
             2 => 'role_name',
             3 => 'users.email',
+            4 => 'users.status',
         ];
 
-        $totalData = DB::table('users')->count();
+        $totalData = DB::table('users')
+            ->where('users.status', 1)
+            ->whereNull('users.deleted_at')
+            ->count();
         $totalFiltered = $totalData;
 
         $limit = $request->input('length');
@@ -97,8 +110,11 @@ class UserController extends Controller{
                 'users.id',
                 'users.name',
                 'users.email',
+                'users.status',
                 'roles.name as role_name',
-            ]);
+            ])
+            ->where('users.status', 1)
+            ->whereNull('users.deleted_at');
 
         if (!empty($request->input('search.value'))) {
             $search = $request->input('search.value');
@@ -124,7 +140,10 @@ class UserController extends Controller{
             $nested['nome']     = $item->name;
             $nested['email']    = $item->email;
             $nested['role']     = "<span class='badge badge-light'>{$item->role_name}</span>";
-            $nested['status'] = '<span class="badge badge-success">Ativo</span>';
+            $checked = $item->status ? 'checked' : '';
+            $nested['status'] = "<label class='form-check form-switch'>"
+                ."<input type='checkbox' class='form-check-input toggle-status' data-id='{$item->id}' {$checked}>"
+                ."</label>";
 
             $token = csrf_token();
             $nested['acoes']    = "

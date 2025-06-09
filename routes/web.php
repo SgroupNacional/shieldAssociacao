@@ -20,6 +20,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::resource('users', UserController::class);
+    Route::match(['post', 'put'], 'users/{user}/status', [UserController::class, 'toggleStatus'])->name('users.toggle-status');
     Route::post('users/listar', [UserController::class, 'listar'])->name('users.listar');
 
     Route::resource('roles', RoleController::class);

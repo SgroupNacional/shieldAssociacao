@@ -82,6 +82,44 @@
             $("#pesquisa").on('keyup', function () {
                 tabela.search(this.value).draw();
             });
+
+            $(document).on('change', '.toggle-status', function () {
+                let checkbox = $(this);
+                let id = checkbox.data('id');
+                let url = '/users/' + id + '/status';
+
+                iziToast.question({
+                    timeout: false,
+                    close: false,
+                    overlay: true,
+                    displayMode: 'once',
+                    title: 'Confirmação',
+                    message: 'Deseja alterar o status?',
+                    position: 'center',
+                    buttons: [
+                        ['<button>Sim</button>', function (instance, toast) {
+                            $.ajax({
+                                url: url,
+                                method: 'POST',
+                                data: {_token: '{{ csrf_token() }}'},
+                                success: function () {
+                                    iziToast.success({title: 'Sucesso', message: 'Status atualizado'});
+                                    tabela.ajax.reload(null, false);
+                                },
+                                error: function () {
+                                    iziToast.error({title: 'Erro', message: 'Não foi possível atualizar'});
+                                    tabela.ajax.reload(null, false);
+                                }
+                            });
+                            instance.hide({transitionOut: 'fadeOut'}, toast, 'button');
+                        }, true],
+                        ['<button>Não</button>', function (instance, toast) {
+                            checkbox.prop('checked', !checkbox.prop('checked'));
+                            instance.hide({transitionOut: 'fadeOut'}, toast, 'button');
+                        }]
+                    ]
+                });
+            });
         });
     </script>
 @endsection
