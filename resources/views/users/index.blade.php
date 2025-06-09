@@ -131,6 +131,40 @@
                 });
             });
 
+            $(document).on('click', '.delete-user', function (e) {
+                e.preventDefault();
+                let id = $(this).data('id');
+                let url = '/users/' + id;
+
+                iziToast.question({
+                    timeout: false,
+                    close: false,
+                    overlay: true,
+                    displayMode: 'once',
+                    title: 'Confirmação',
+                    message: 'Tem certeza que deseja excluir este usuário?',
+                    position: 'center',
+                    buttons: [
+                        ['<button>Sim</button>', function (instance, toast) {
+                            $.ajax({
+                                url: url,
+                                method: 'DELETE',
+                                data: {_token: '{{ csrf_token() }}'},
+                                success: function () {
+                                    iziToast.success({title: 'Sucesso', message: 'Usuário excluído'});
+                                    tabela.ajax.reload(null, false);
+                                },
+                                error: function () {
+                                    iziToast.error({title: 'Erro', message: 'Não foi possível excluir'});
+                                    tabela.ajax.reload(null, false);
+                                }
+                            });
+                            instance.hide({transitionOut: 'fadeOut'}, toast, 'button');
+                        }, true],
+                        ['<button>Não</button>', function (instance, toast) {
+                            instance.hide({transitionOut: 'fadeOut'}, toast, 'button');
+                        }]
+                    ]
             $(document).on('click', '.view-user', function () {
                 const id = $(this).data('id');
                 $('#modalViewUser .modal-content').load('/users/' + id + '/view-modal', function () {
