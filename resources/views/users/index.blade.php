@@ -1,7 +1,7 @@
 @extends('template.app')
 
 @section('css')
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
+    <link href="{{ asset('metronic/assets/plugins/custom/datatables/datatables.bundle.css') }}" rel="stylesheet" type="text/css" />
 @endsection
 
 @section('corpo')
@@ -9,42 +9,78 @@
         {{ __('Usuários') }}
     </h2>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
-                <table id="users-table" class="min-w-full divide-y divide-gray-200 w-full">
-                    <thead>
-                        <tr>
-                            <th>Nome</th>
-                            <th>{{ __('Email') }}</th>
-                            <th>Grupo</th>
-                            <th>Criado em</th>
-                        </tr>
-                    </thead>
-                </table>
+    <div class="card card-flush">
+        <div class="card-header pt-10">
+            <div class="d-flex flex-wrap w-100 justify-content-between align-items-center">
+
+                <!-- Campo de pesquisa à esquerda -->
+                <div class="d-flex align-items-center mb-2">
+                    <i class="ki-duotone ki-magnifier fs-3 position-absolute ms-5">
+                        <span class="path1"></span>
+                        <span class="path2"></span>
+                    </i>
+                    <input type="text" id="pesquisa" class="form-control form-control-solid w-250px ps-13"
+                           placeholder="Pesquisar" />
+                </div>
+
+                <!-- Botão à direita -->
+                <a href="{{ route('users.create') }}" class="btn btn-primary mb-2">
+                    <i class="ki-outline ki-plus fs-2"></i> Novo Usuário
+                </a>
             </div>
+        </div>
+        <div class="card-body pt-0">
+            <table class="table align-middle table-row-dashed fs-6 gy-5" id="usuarios">
+                <thead>
+                <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
+                    <th>#</th>
+                    <th>Nome</th>
+                    <th>Grupo/Permissões</th>
+                    <th>E-mail</th>
+                    <th>Status</th>
+                    <th class="text-end">Ações</th>
+                </tr>
+                </thead>
+                <tbody class="text-gray-600 fw-semibold">
+                {{-- Populado via DataTable --}}
+                </tbody>
+            </table>
         </div>
     </div>
 @endsection
 
 @section('js')
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+    <script src="{{ asset('metronic/assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
 @endsection
 
 @section('script')
     <script>
-        $(function () {
-            $('#users-table').DataTable({
-                serverSide: true,
+        $(document).ready(function () {
+            var tabela = $('#usuarios').DataTable({
                 processing: true,
-                ajax: '{{ route('users.data') }}',
+                serverSide: true,
+                ajax: {
+                    url: '{{ route('users.listar') }}',
+                    type: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}'
+                    }
+                },
                 columns: [
-                    { data: 'name', name: 'name' },
+                    { data: 'id', name: 'id' },
+                    { data: 'nome', name: 'nome' },
+                    { data: 'role', name: 'role' },
                     { data: 'email', name: 'email' },
-                    { data: 'role', name: 'role', orderable: false, searchable: false },
-                    { data: 'created_at', name: 'created_at' }
-                ]
+                    { data: 'status', name: 'status' },
+                    { data: 'acoes', name: 'acoes', orderable: false, searchable: false }
+                ],
+                language: {
+                    url: '/metronic/assets/js/json/datatablePTBR.json'
+                }
+            });
+
+            $("#pesquisa").on('keyup', function () {
+                tabela.search(this.value).draw();
             });
         });
     </script>

@@ -7,36 +7,24 @@ use App\Models\Role;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
 
-class UserController extends Controller
-{
-    /**
-     * Display a listing of the resource.
-     */
-    public function index(): View
-    {
+class UserController extends Controller{
+    public function index(): View{
         $users = User::all();
 
         return view('users.index', compact('users'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create(): View
-    {
+    public function create(): View{
         $roles = Role::all();
 
         return view('users.create', compact('roles'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request): RedirectResponse
-    {
+    public function store(Request $request): RedirectResponse{
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
@@ -51,21 +39,13 @@ class UserController extends Controller
         return redirect()->route('users.index');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(User $user): View
-    {
+    public function edit(User $user): View{
         $roles = Role::all();
 
         return view('users.edit', compact('user', 'roles'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, User $user): RedirectResponse
-    {
+    public function update(Request $request, User $user): RedirectResponse{
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email,' . $user->id],
@@ -84,65 +64,76 @@ class UserController extends Controller
         return redirect()->route('users.index');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(User $user): RedirectResponse
-    {
+    public function destroy(User $user): RedirectResponse{
         $user->delete();
 
         return redirect()->route('users.index');
     }
 
-    public function data(Request $request): JsonResponse
-    {
-        $total = User::count();
+    public function listar(Request $request){
+        $columns = [
+            0 => 'users.id',
+            1 => 'users.name',
+            2 => 'role_name',
+            3 => 'users.email',
+        ];
 
-        $query = User::with('role');
+        $totalData = DB::table('users')->count();
+        $totalFiltered = $totalData;
 
-        if ($search = $request->input('search.value')) {
+        $limit = $request->input('length');
+        $start = $request->input('start');
+        $order = $columns[$request->input('order.0.column')];
+        $dir   = $request->input('order.0.dir');
+
+        $query = DB::table('users')
+            ->leftJoin('roles', 'users.role_id', '=', 'roles.id')
+            ->select([
+                'users.id',
+                'users.name',
+                'users.email',
+                'roles.name as role_name',
+            ]);
+
+        if (!empty($request->input('search.value'))) {
+            $search = $request->input('search.value');
             $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                    ->orWhere('email', 'like', "%{$search}%")
-                    ->orWhereHas('role', function ($q) use ($search) {
-                        $q->where('name', 'like', "%{$search}%");
-                    });
+                $q->where('users.name', 'LIKE', "%{$search}%")
+                    ->orWhere('users.email', 'LIKE', "%{$search}%")
+                    ->orWhere('roles.name', 'LIKE', "%{$search}%");
             });
+            $totalFiltered = $query->count();
         }
 
-        $filtered = $query->count();
+        $associados = $query
+            ->offset($start)
+            ->limit($limit)
+            ->orderBy($order, $dir)
+            ->get();
 
-        $columns = ['name', 'email', 'role', 'created_at'];
-        $orderColumn = $columns[$request->input('order.0.column', 0)] ?? 'name';
-        $orderDir = $request->input('order.0.dir', 'asc');
+        $data = [];
 
-        if ($orderColumn === 'role') {
-            $query->join('roles', 'users.role_id', '=', 'roles.id')
-                  ->orderBy('roles.name', $orderDir)
-                  ->select('users.*');
-        } else {
-            $query->orderBy($orderColumn, $orderDir);
+        foreach ($associados as $item) {
+            $nested = [];
+            $nested['id']       = $item->id;
+            $nested['nome']     = $item->name;
+            $nested['email']    = $item->email;
+            $nested['role']     = "<span class='badge badge-light'>{$item->role_name}</span>";
+            $nested['status'] = '<span class="badge badge-success">Ativo</span>';
+            $nested['acoes']    = "
+            <div class='text-end'>
+                <a href='/users/{$item->id}' class='btn btn-sm btn-info me-1'>Visualizar</a>
+                <a href='/users/{$item->id}/edit' class='btn btn-sm btn-warning'>Editar</a>
+            </div>";
+
+            $data[] = $nested;
         }
-
-        $start = $request->input('start', 0);
-        $length = $request->input('length', 10);
-
-        $users = $query->skip($start)->take($length)->get();
-
-        $data = $users->map(function (User $user) {
-            return [
-                'name' => $user->name,
-                'email' => $user->email,
-                'role' => $user->role?->name,
-                'created_at' => $user->created_at->format('Y-m-d'),
-            ];
-        });
 
         return response()->json([
-            'draw' => intval($request->input('draw')), 
-            'recordsTotal' => $total,
-            'recordsFiltered' => $filtered,
-            'data' => $data,
+            "draw"            => intval($request->input('draw')),
+            "recordsTotal"    => $totalData,
+            "recordsFiltered" => $totalFiltered,
+            "data"            => $data,
         ]);
     }
 }

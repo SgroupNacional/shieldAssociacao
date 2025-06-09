@@ -19,7 +19,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::resource('users', UserController::class);
-    Route::get('users/data', [UserController::class, 'data'])->name('users.data');
+    Route::post('users/listar', [UserController::class, 'listar'])->name('users.listar');
 
     Route::get('/admin', function () {
         return view('dashboard');
