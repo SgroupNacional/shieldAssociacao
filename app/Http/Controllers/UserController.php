@@ -24,8 +24,7 @@ class UserController extends Controller{
         return view('users.create', compact('roles'));
     }
 
-    public function createModal(): View
-    {
+    public function createModal(): View{
         $roles = Role::all();
 
         return view('users.partials.create-modal', compact('roles'));
