@@ -24,9 +24,9 @@
                 </div>
 
                 <!-- Botão à direita -->
-                <a href="{{ route('users.create') }}" class="btn btn-primary mb-2">
+                <button type="button" id="btnCreateUser" class="btn btn-primary mb-2">
                     <i class="ki-outline ki-plus fs-2"></i> Novo Usuário
-                </a>
+                </button>
             </div>
         </div>
         <div class="card-body pt-0">
@@ -53,6 +53,11 @@
         </div>
     </div>
     <div class="modal fade" id="modalEditUser" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content"></div>
+        </div>
+    </div>
+    <div class="modal fade" id="modalCreateUser" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content"></div>
         </div>
@@ -165,6 +170,8 @@
                             instance.hide({transitionOut: 'fadeOut'}, toast, 'button');
                         }]
                     ]
+                });
+            });
             $(document).on('click', '.view-user', function () {
                 const id = $(this).data('id');
                 $('#modalViewUser .modal-content').load('/users/' + id + '/view-modal', function () {
@@ -177,6 +184,13 @@
                 const id = $(this).data('id');
                 $('#modalEditUser .modal-content').load('/users/' + id + '/edit-modal', function () {
                     const modal = new bootstrap.Modal(document.getElementById('modalEditUser'));
+                    modal.show();
+                });
+            });
+
+            $(document).on('click', '#btnCreateUser', function () {
+                $('#modalCreateUser .modal-content').load('/users/create-modal', function () {
+                    const modal = new bootstrap.Modal(document.getElementById('modalCreateUser'));
                     modal.show();
                 });
             });
@@ -195,6 +209,24 @@
                     },
                     error: function (xhr) {
                         $('#modalEditUser .modal-content').html(xhr.responseText);
+                    }
+                });
+            });
+
+            $(document).on('submit', '#modalCreateUser form', function (e) {
+                e.preventDefault();
+                let form = $(this);
+                $.ajax({
+                    url: form.attr('action'),
+                    method: 'POST',
+                    data: form.serialize(),
+                    success: function () {
+                        bootstrap.Modal.getInstance(document.getElementById('modalCreateUser')).hide();
+                        tabela.ajax.reload(null, false);
+                        iziToast.success({title: 'Sucesso', message: 'Usuário criado'});
+                    },
+                    error: function (xhr) {
+                        $('#modalCreateUser .modal-content').html(xhr.responseText);
                     }
                 });
             });
