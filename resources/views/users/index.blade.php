@@ -47,6 +47,16 @@
             </table>
         </div>
     </div>
+    <div class="modal fade" id="modalViewUser" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content"></div>
+        </div>
+    </div>
+    <div class="modal fade" id="modalEditUser" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content"></div>
+        </div>
+    </div>
 @endsection
 
 @section('js')
@@ -118,6 +128,40 @@
                             instance.hide({transitionOut: 'fadeOut'}, toast, 'button');
                         }]
                     ]
+                });
+            });
+
+            $(document).on('click', '.view-user', function () {
+                const id = $(this).data('id');
+                $('#modalViewUser .modal-content').load('/users/' + id + '/view-modal', function () {
+                    const modal = new bootstrap.Modal(document.getElementById('modalViewUser'));
+                    modal.show();
+                });
+            });
+
+            $(document).on('click', '.edit-user', function () {
+                const id = $(this).data('id');
+                $('#modalEditUser .modal-content').load('/users/' + id + '/edit-modal', function () {
+                    const modal = new bootstrap.Modal(document.getElementById('modalEditUser'));
+                    modal.show();
+                });
+            });
+
+            $(document).on('submit', '#modalEditUser form', function (e) {
+                e.preventDefault();
+                let form = $(this);
+                $.ajax({
+                    url: form.attr('action'),
+                    method: 'POST',
+                    data: form.serialize(),
+                    success: function () {
+                        bootstrap.Modal.getInstance(document.getElementById('modalEditUser')).hide();
+                        tabela.ajax.reload(null, false);
+                        iziToast.success({title: 'Sucesso', message: 'Usuário atualizado'});
+                    },
+                    error: function (xhr) {
+                        $('#modalEditUser .modal-content').html(xhr.responseText);
+                    }
                 });
             });
         });
