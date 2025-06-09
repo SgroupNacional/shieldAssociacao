@@ -1,9 +1,13 @@
-<x-metronic-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Usuários') }}
-        </h2>
-    </x-slot>
+@extends('template.app')
+
+@section('css')
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
+@endsection
+
+@section('corpo')
+    <h2 class="font-semibold text-xl text-gray-800 leading-tight mb-5">
+        {{ __('Usuários') }}
+    </h2>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -21,25 +25,27 @@
             </div>
         </div>
     </div>
+@endsection
 
-    @push('scripts')
-        <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
-        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-        <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
-        <script>
-            $(function () {
-                $('#users-table').DataTable({
-                    serverSide: true,
-                    processing: true,
-                    ajax: '{{ route('users.data') }}',
-                    columns: [
-                        { data: 'name', name: 'name' },
-                        { data: 'email', name: 'email' },
-                        { data: 'role', name: 'role', orderable: false, searchable: false },
-                        { data: 'created_at', name: 'created_at' }
-                    ]
-                });
+@section('js')
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+@endsection
+
+@section('script')
+    <script>
+        $(function () {
+            $('#users-table').DataTable({
+                serverSide: true,
+                processing: true,
+                ajax: '{{ route('users.data') }}',
+                columns: [
+                    { data: 'name', name: 'name' },
+                    { data: 'email', name: 'email' },
+                    { data: 'role', name: 'role', orderable: false, searchable: false },
+                    { data: 'created_at', name: 'created_at' }
+                ]
             });
-        </script>
-    @endpush
-</x-metronic-layout>
+        });
+    </script>
+@endsection
