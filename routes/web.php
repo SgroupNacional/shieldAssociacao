@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
@@ -20,6 +21,9 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('users', UserController::class);
     Route::post('users/listar', [UserController::class, 'listar'])->name('users.listar');
+
+    Route::resource('roles', RoleController::class);
+    Route::post('roles/listar', [RoleController::class, 'listar'])->name('roles.listar');
 
     Route::get('/admin', function () {
         return view('dashboard');
