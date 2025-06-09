@@ -170,6 +170,8 @@
                             instance.hide({transitionOut: 'fadeOut'}, toast, 'button');
                         }]
                     ]
+                });
+            });
             $(document).on('click', '.view-user', function () {
                 const id = $(this).data('id');
                 $('#modalViewUser .modal-content').load('/users/' + id + '/view-modal', function () {
