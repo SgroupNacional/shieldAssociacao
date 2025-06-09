@@ -20,11 +20,12 @@ class DatabaseSeeder extends Seeder
         $this->call(RoleSeeder::class);
 
         $adminRole = Role::where('name', 'Administrador')->first();
+        $password = env('ADMIN_PASSWORD', 'password');
 
         User::factory()->create([
             'name' => 'André Jálisson',
             'email' => 'andrejalisson@sgroupnacional.com.br',
-            'password' => Hash::make('Kk@31036700#'),
+            'password' => Hash::make($password),
             'role_id' => $adminRole?->id,
         ]);
     }
